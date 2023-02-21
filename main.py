@@ -26,7 +26,7 @@ def get_reserva_codes(content, book_activity, book_hour):
                 if item.string == book_activity:
                     link = item.parent.parent.parent.parent # a tag parent with code
                     code = link.get("data-post-id")
-                    code = link.get("data-user-id")
+                    uid = link.get("data-user-id")
                     break
                 else:
                     item = item.next
@@ -43,6 +43,9 @@ parser.add_argument("--activity", default="CROSS OLYMPIA", help="Pass hour to bo
 parser.add_argument("--email", required=True, help="Pass hour to book")
 parser.add_argument("--password", required=True, help="Pass hour to book")
 opts = parser.parse_args() 
+
+# logging config
+logging.basicConfig(filename="bot.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') 
 
 # globals
 clases_url = "https://www.olympialcoy.com/reservas/clases"
@@ -89,7 +92,9 @@ resp = session.post(
 resp_json = json.loads(resp.content)
 
 if resp_json == "ok":
-    print("SUCCESS BOOKING")
+    logging.info("SUCCESS BOOKING. msg: {}".format(resp_json["msg"]))
+else:
+    logging.info("FAILED BOOKING. msg: {}".format(resp_json["msg"]))
 
 # exit 
 logout(session)

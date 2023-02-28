@@ -22,6 +22,7 @@ session = HTMLSession()
 
 # functions
 def login(email, password):
+    logout()
     # login loop
     while True:
         login_resp = session.post(
